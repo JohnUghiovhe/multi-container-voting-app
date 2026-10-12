@@ -73,5 +73,5 @@ jobs:
           script: |
             cd /var/www/voting-app
             git pull origin main
-            sudo docker compose pull
-            sudo docker compose up -d
+            docker compose pull
+            docker compose up -d
