@@ -54,7 +54,7 @@ services:
 
   # 3. Flask Web Application
   web:
-    build: ./app
+    image: techtoby01/voting-app-web:latest
     restart: unless-stopped
     ports:
       - "5000:5000"
@@ -91,7 +91,7 @@ services:
 
   # 4. Node.js Background Worker
   worker:
-    build: ./worker
+    image: techtoby01/voting-app-worker:latest
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-voting_user}:${POSTGRES_PASSWORD:-supersecretpassword}@db:5432/${POSTGRES_DB:-voting_db}
