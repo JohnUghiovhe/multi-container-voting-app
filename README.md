@@ -73,7 +73,7 @@ Our pipeline automatically runs on every push to `main`:
 
 ## 🔧 Troubleshooting
 - **Port Conflict (5432/6379)**: Stop local PostgreSQL/Redis services (`sudo systemctl stop postgresql redis-server`).
-- **Docker build fails**: Check `docker compose logs <service-name>`.
+- **Docker build fails**: *Invalid workflow file* error due to YAML indentation rules. we diagnosed the issue by reading the Github Action error logs, corrected the indentation and successfully re-ran the pipeline. 
 - **Pipeline fails at Deploy**: Ensure `EC2_SSH_KEY` in GitHub Secrets contains the entire private key, and that `sudo docker` permissions are not required on the server.
 - **Votes not appearing**: Check the Node.js worker logs (`docker logs voting-app-worker-1`) to ensure it is successfully connecting to Redis and PostgreSQL.
 
@@ -89,6 +89,11 @@ Our pipeline automatically runs on every push to `main`:
 *   Add OAuth2 social login (Google/GitHub) to improve user experience.
 
 ## 📸 Screenshots
-*(Note: Add your screenshots to a `docs/screenshots/` folder and update the links below)*
 ![GitHub Actions Pipeline](docs/screenshots/pipeline.png)
+GitHub Actions Pipeline
+
+![DockerHub Images](docs/screenshots/dockerhub.png)
+DockerHub Images
+
 ![Live Voting App](docs/screenshots/app.png)
+Live Voting App
