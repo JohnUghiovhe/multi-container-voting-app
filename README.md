@@ -11,7 +11,7 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 *   Establish a fully automated CI/CD pipeline from GitHub to AWS EC2 to eliminate manual deployment errors.
 
 ## 🏗️ Architecture
-![Architecture Diagram](docs/architecture.png) 
+![Architecture Diagram](docs/architecture.jpg) 
 
 *   **Flask (`web`)**: Handles HTTP routing, UI rendering, authentication, and vote submission. It acts as the API layer.
 *   **Node.js (`worker`)**: Background worker that continuously drains the Redis queue and writes votes to PostgreSQL asynchronously.
