@@ -19,7 +19,7 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 *   **Redis (`redis`)**: Acts as both a message broker (vote queue) and a caching layer (results cache) to optimize performance.
 
 ## 🛠️ Tech Stack
-*   **Frontend**: HTML5, CSS3, Jinja2 Templates
+*   **Frontend**: HTML5 Templates
 *   **Backend**: Python (Flask), Node.js
 *   **Database**: PostgreSQL 15, Redis 7
 *   **DevOps**: Docker, Docker Compose, GitHub Actions, AWS EC2
