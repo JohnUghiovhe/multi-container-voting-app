@@ -31,6 +31,10 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 4. Run tests: `python -m pytest tests/ -v`
 5. Start the app locally: `flask run --host=0.0.0.0`
 
+## 🧠 Microservices in Action (Asynchronous Processing)
+This screenshot demonstrates the asynchronous architecture working in real-time. The left pane shows the Flask web server receiving HTTP requests (login, register, vote). The right pane shows the Node.js worker running as a separate service. When a user votes, Flask pushes the vote to the Redis queue (`vote_queue`) and immediately returns a success page. The Node.js worker then pulls the vote from the queue and safely writes it to PostgreSQL in the background, preventing database lockups under high traffic.
+![Microservices ](docs/screenshots/microservices.png)
+
 ### Running the Automated Tests
 The project includes a comprehensive test suite built with `pytest`. The tests are designed to be completely service-free (no Docker, PostgreSQL, or Redis required) by using SQLite and `fakeredis`.
 
@@ -48,18 +52,23 @@ Execute the following command to run all tests:
 ```bash
 python -m pytest tests/ -v
 ```
+![PYtest](docs/screenshots/pytest.png)
+![PYtest](docs/screenshots/pytest1.png)
 
 ## 🐳 Running with Docker Compose
 1. Clone the repository: `git clone https://github.com/Jrtoby/multi-container-voting-app.git`
 2. Ensure you have a `.env` file in `app/` and `worker/` (or use the root `.env`).
 3. Build and start: `sudo docker compose up -d --build`
 4. Access the app at `http://15.240.192.34:5000`
+![Docker Compose](docs/screenshots/docker_compose_status.png)
 
 ## ☁️ Deployment (CI/CD Pipeline)
 Our pipeline automatically runs on every push to `main`:
 1. **Test**: Runs the `pytest` suite (SQLite + `fakeredis` for fast, isolated testing).
 2. **Build**: Builds Docker images for the Flask web app and Node.js worker, pushing them to Docker Hub.
 3. **Deploy**: SSHes into the AWS EC2 instance, pulls the latest images, and restarts the containers using Docker Compose.
+![GitHub Actions Pipeline](docs/screenshots/pipeline.png)
+GitHub Actions Pipeline
 
 ## 🔐 Environment Variables
 | Variable | Description |
@@ -89,8 +98,6 @@ Our pipeline automatically runs on every push to `main`:
 *   Add OAuth2 social login (Google/GitHub) to improve user experience.
 
 ## 📸 Screenshots
-![GitHub Actions Pipeline](docs/screenshots/pipeline.png)
-GitHub Actions Pipeline
 
 ![DockerHub Images](docs/screenshots/dockerhub.png)
 DockerHub Images
