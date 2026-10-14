@@ -16,7 +16,9 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 **Observation:** 
 - Traditional monolithic apps crash under heavy traffic. If 1,000 users vote simultaneously, the database locks up, and the app becomes unresponsive.
 - The Manual Deployment Problem: Manually deploying updates is slow, error-prone, and requires downtime.
-**The Solution:** We need asynchronous processing, caching, containerization, and a fully automated deployment pipeline.
+
+**The Solution:** 
+- We need asynchronous processing, caching, containerization, and a fully automated deployment pipeline.
 
 ## 🎯 Project Objectives
 *   Build a secure, scalable web-based voting platform where users can register, authenticate, and cast a single vote.
