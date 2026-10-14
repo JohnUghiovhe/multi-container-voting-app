@@ -2,6 +2,21 @@
 ![CI](https://github.com/Jrtoby/multi-container-voting-app/actions/workflows/ci.yml/badge.svg)
 
 A Dockerised, multi-service voting application built with Flask, Node.js, PostgreSQL and Redis, featuring a fully automated CI/CD pipeline.
+**🌐 Live URL:** [http://15.240.192.34:5000](http://15.240.192.34:5000)
+
+## 👥 Team Members
+* **Okafor, Sopuluchukwu.T**                                
+* **Oshioriamhe, Ughiovhe.J** (Docker_compose & pytest)          
+* **Martins, Ebinum**
+* **Alex, Chimnonolu.A**
+* **Christopher, Solomon.O**
+* **Takang, Desmond**
+
+## Problem statement
+**Observation:** 
+- Traditional monolithic apps crash under heavy traffic. If 1,000 users vote simultaneously, the database locks up, and the app becomes unresponsive.
+- The Manual Deployment Problem: Manually deploying updates is slow, error-prone, and requires downtime.
+**The Solution:** We need asynchronous processing, caching, containerization, and a fully automated deployment pipeline.
 
 ## 🎯 Project Objectives
 *   Build a secure, scalable web-based voting platform where users can register, authenticate, and cast a single vote.
@@ -31,7 +46,7 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 4. Run tests: `python -m pytest tests/ -v`
 5. Start the app locally: `flask run --host=0.0.0.0`
 
-## 🧠 Microservices in Action (Asynchronous Processing)
+### Microservices in Action (Asynchronous Processing)
 This screenshot demonstrates the asynchronous architecture working in real-time. The left pane shows the Flask web server receiving HTTP requests (login, register, vote). The right pane shows the Node.js worker running as a separate service. When a user votes, Flask pushes the vote to the Redis queue (`vote_queue`) and immediately returns a success page. The Node.js worker then pulls the vote from the queue and safely writes it to PostgreSQL in the background, preventing database lockups under high traffic.
 ![Microservices ](docs/screenshots/microservices.png)
 
@@ -46,7 +61,7 @@ git pull origin main
 cd app
 source venv/bin/activate
 pip install -r requirements.txt
-
+```
 Execute the following command to run all tests:
 
 ```bash
@@ -60,7 +75,10 @@ python -m pytest tests/ -v
 2. Ensure you have a `.env` file in `app/` and `worker/` (or use the root `.env`).
 3. Build and start: `sudo docker compose up -d --build`
 4. Access the app at `http://15.240.192.34:5000`
-![Docker Compose](docs/screenshots/docker_compose_status.png)
+
+### Production Deployment with Docker Compose
+The application is fully containerized. Below is a screenshot of our Docker Compose environment running all four services (web, worker, db, redis) with health checks passing.
+![Docker Compose Status](docs/screenshots/docker_compose_status.png)
 
 ## ☁️ Deployment (CI/CD Pipeline)
 Our pipeline automatically runs on every push to `main`:
@@ -82,18 +100,18 @@ GitHub Actions Pipeline
 
 ## 🔧 Troubleshooting
 - **Port Conflict (5432/6379)**: Stop local PostgreSQL/Redis services (`sudo systemctl stop postgresql redis-server`).
-- **Docker build fails**: *Invalid workflow file* error due to YAML indentation rules. we diagnosed the issue by reading the Github Action error logs, corrected the indentation and successfully re-ran the pipeline. 
+- **Docker build fails**: docker compose logs
 - **Pipeline fails at Deploy**: Ensure `EC2_SSH_KEY` in GitHub Secrets contains the entire private key, and that `sudo docker` permissions are not required on the server.
 - **Votes not appearing**: Check the Node.js worker logs (`docker logs voting-app-worker-1`) to ensure it is successfully connecting to Redis and PostgreSQL.
 
 ## 🧗 Challenges Encountered & Solutions
 *   **Merge Conflicts**: Collaborators edited the same `docker-compose.yml` file. Resolved by carefully reviewing the code in GitHub and merging the optimized `npm ci` build logic.
-*   **YAML Indentation**: GitHub Actions failed due to incorrect indentation in `ci.yml`. Fixed by aligning the `build` job under the `jobs` hierarchy.
+*   **YAML Indentation**: GitHub Actions failed due to incorrect indentation in `ci.yml`. Fixed by aligning the `build` job under the `jobs` hierarchy. (diagnosed the issue by reading the Github Action error logs, corrected the indentation and successfully re-ran the pipeline.)
 *   **Deployment Permissions**: The pipeline failed with `sudo: A terminal is required`. Solved by granting passwordless Docker group access to the deploy user on EC2 and removing `sudo` from the deployment pipeline script.
 *   **Port Conflicts**: Local PostgreSQL and Redis interfered with Docker. Fixed by removing exposed ports for these services in the Docker network, db:5432 / Redis: 6379
 
-## 🔮 Future Improvements
-*   Migrate from Docker Compose to Kubernetes for better scaling.
+## Future Improvements
+*   Migrate from Docker Compose to Kubernetes (K8s) for better scaling.
 *   Implement Prometheus and Grafana for advanced monitoring and alerting.
 *   Add OAuth2 social login (Google/GitHub) to improve user experience.
 
