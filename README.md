@@ -5,12 +5,14 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 **🌐 Live URL:** [http://15.240.192.34:5000](http://15.240.192.34:5000)
 
 ## 👥 Team Members
-* **Okafor, Sopuluchukwu.T**                                
-* **Oshioriamhe, Ughiovhe.J** (Docker_compose & pytest)          
-* **Martins, Ebinum**
-* **Alex, Chimnonolu.A**
-* **Christopher, Solomon.O**
-* **Takang, Desmond**
+* **Okafor, Sopuluchukwu.T**  (Infrastructure, Integration & Env [py, node.js, P.SQL, Redis, Docker], Version Control management [PR review, conflict & Merge main], CI/CD pipeline secret & ssh key, Documentation.                       
+* **Oshioriamhe, Ughiovhe.J** (Docker_compose, Env, pytest & Troubleshooting)          
+* **Martins, Ebinum**         (CI Build/Push)
+* **Alex, Chimnonolu.A**      (CI Testing )
+* **Christopher, Solomon.O**  (Web/Worker Docker_compose update)
+* **Takang, Desmond**         (CD Deployment)
+* **Oluwasogo, Koselu.P**     (Flask Dockerfile & Env)
+* **Ayomide, Aruna.D**        (Node_Worker Dockerfile & Env)
 
 ## Problem statement
 **Observation:** 
@@ -28,12 +30,20 @@ A Dockerised, multi-service voting application built with Flask, Node.js, Postgr
 *   Establish a fully automated CI/CD pipeline from GitHub to AWS EC2 to eliminate manual deployment errors.
 
 ## 🏗️ Architecture
+![Architecture Diagram](docs/architecture2.jpg)
 ![Architecture Diagram](docs/architecture.jpg) 
 
 *   **Flask (`web`)**: Handles HTTP routing, UI rendering, authentication, and vote submission. It acts as the API layer.
 *   **Node.js (`worker`)**: Background worker that continuously drains the Redis queue and writes votes to PostgreSQL asynchronously.
 *   **PostgreSQL (`db`)**: Persistent relational storage for users, polls, and votes.
 *   **Redis (`redis`)**: Acts as both a message broker (vote queue) and a caching layer (results cache) to optimize performance.
+*   **CI/CD** Built a fully functional CI/CD pipeline that deploys to AWS automatically. Once the workflow file is updated, the pipeline will automatically trigger again.
+
+Watching the Actions tab. You should see:
+
+- test job: Green ✅
+- build job: Green ✅
+- deploy job: Green ✅
 
 ## 🛠️ Tech Stack
 *   **Frontend**: HTML5 Templates
@@ -86,7 +96,7 @@ The application is fully containerized. Below is a screenshot of our Docker Comp
 Our pipeline automatically runs on every push to `main`:
 1. **Test**: Runs the `pytest` suite (SQLite + `fakeredis` for fast, isolated testing).
 2. **Build**: Builds Docker images for the Flask web app and Node.js worker, pushing them to Docker Hub.
-3. **Deploy**: SSHes into the AWS EC2 instance, pulls the latest images, and restarts the containers using Docker Compose.
+3. **Deploy**: SSH into the AWS EC2 instance, pulls the latest images, and restarts the containers using Docker Compose.
 ![GitHub Actions Pipeline](docs/screenshots/pipeline.png)
 GitHub Actions Pipeline
 
@@ -109,7 +119,7 @@ GitHub Actions Pipeline
 ## 🧗 Challenges Encountered & Solutions
 *   **Merge Conflicts**: Collaborators edited the same `docker-compose.yml` file. Resolved by carefully reviewing the code in GitHub and merging the optimized `npm ci` build logic.
 *   **YAML Indentation**: GitHub Actions failed due to incorrect indentation in `ci.yml`. Fixed by aligning the `build` job under the `jobs` hierarchy. (diagnosed the issue by reading the Github Action error logs, corrected the indentation and successfully re-ran the pipeline.)
-*   **Deployment Permissions**: The pipeline failed with `sudo: A terminal is required`. Solved by granting passwordless Docker group access to the deploy user on EC2 and removing `sudo` from the deployment pipeline script.
+*   **Deployment Permissions**: The pipeline failed with `sudo: A terminal is required to authenticate`. Solved by granting passwordless Docker group access to the deploy user on EC2 (granting the deployment user Docker group privileges `sudo usermod -aG docker $USER` ) and removing `sudo` from the deployment pipeline script.
 *   **Port Conflicts**: Local PostgreSQL and Redis interfered with Docker. Fixed by removing exposed ports for these services in the Docker network, db:5432 / Redis: 6379
 
 ## Future Improvements
